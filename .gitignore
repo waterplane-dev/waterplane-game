@@ -1,0 +1,4 @@
+build/
+.claude/outbox/
+.claude/inbox/
+.outbox/
