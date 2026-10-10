@@ -390,14 +390,20 @@ public class GameView extends View {
         Path p = new Path();
         p.addRect(0, -5 * u, w, bot - 3.5f * u, Path.Direction.CW);
         float rr = w * 0.3f;
-        p.addCircle(w * 0.2f, bot - rr, rr, Path.Direction.CW);
-        p.addCircle(w * 0.52f, bot - rr * 0.9f, rr * 1.05f, Path.Direction.CW);
-        p.addCircle(w * 0.82f, bot - rr * 1.1f, rr * 0.9f, Path.Direction.CW);
+        union(p, w * 0.2f, bot - rr, rr);
+        union(p, w * 0.52f, bot - rr * 0.9f, rr * 1.05f);
+        union(p, w * 0.82f, bot - rr * 1.1f, rr * 0.9f);
         for (float y = bot - 2.2f * rr; y > 0; y -= 2.2f * rr) {
-            p.addCircle(0, y, rr * 0.7f, Path.Direction.CW);
-            p.addCircle(w, y - rr, rr * 0.7f, Path.Direction.CW);
+            union(p, 0, y, rr * 0.7f);
+            union(p, w, y - rr, rr * 0.7f);
         }
         return p;
+    }
+
+    static void union(Path p, float x, float y, float rad) {
+        Path c = new Path();
+        c.addCircle(x, y, rad, Path.Direction.CW);
+        p.op(c, Path.Op.UNION);
     }
 
     static boolean circleRect(float cx, float cy, float rad, float l, float t, float rt, float b) {
@@ -561,10 +567,14 @@ public class GameView extends View {
             case T_CLOUD: {
                 boolean flash = ((time * 0.6f + o.seed) % 4f) < 0.07f;
                 c.save(); c.translate(sx, 0);
-                fill.setShader(null);
-                fill.setColor(flash ? 0xFF4C6585 : 0xFF1A2A3B);
+                if (flash) { fill.setShader(null); fill.setColor(0xFF8FA6C4); }
+                else {
+                    fill.setColor(0xFFFFFFFF);
+                    fill.setShader(new LinearGradient(0, Math.max(0, o.bot - 32 * u), 0, o.bot, 0xFF1E2D3F, 0xFF56697F, Shader.TileMode.CLAMP));
+                }
                 c.drawPath(o.path, fill);
-                stroke.setColor(flash ? 0xCCE9F4F2 : 0x5582A4C0);
+                fill.setShader(null);
+                stroke.setColor(flash ? 0xCCE9F4F2 : 0x8896B4CC);
                 stroke.setStrokeWidth(0.45f * u);
                 c.drawPath(o.path, stroke);
                 if (flash) {
@@ -606,6 +616,7 @@ public class GameView extends View {
                 break;
             }
             case T_FINISH: {
+                fill.setColor(0xFFFFFFFF);
                 fill.setShader(new LinearGradient(0, 0, 0, seaY, 0x00F5A93F, 0xAAF5A93F, Shader.TileMode.CLAMP));
                 c.drawRect(sx - 1.5f * u, 0, sx + 1.5f * u, seaY, fill);
                 fill.setShader(null);
@@ -734,12 +745,12 @@ public class GameView extends View {
         text.setTextAlign(Paint.Align.CENTER);
         float a = 0.65f + 0.35f * (float) Math.sin(time * 4);
         text.setTextSize(6 * u); text.setColor(FOAM); text.setAlpha((int) (255 * a));
-        c.drawText("HOLD TO CLIMB", W / 2, 36 * u, text);
+        c.drawText("HOLD TO CLIMB", W / 2, 25 * u, text);
         text.setAlpha(255);
         text.setTextSize(3 * u); text.setColor(0xCCE9F4F2);
-        c.drawText("release to glide · thread the gaps · grab the ▌ cursors", W / 2, 43 * u, text);
+        c.drawText("release to glide · thread the gaps · grab the ▌ cursors", W / 2, 31 * u, text);
         text.setColor(AMBER);
-        c.drawText("climbing burns TOKENS — touch down gently on the water to refuel", W / 2, 48.5f * u, text);
+        c.drawText("climbing burns TOKENS — touch down gently on the water to refuel", W / 2, 36 * u, text);
     }
 
     void banner(Canvas c, String title, String sub) {
@@ -787,6 +798,7 @@ public class GameView extends View {
         playBtn.set(cx - pw / 2, pyy, cx + pw / 2, pyy + ph);
         float pulse = 1 + 0.03f * (float) Math.sin(time * 4);
         c.save(); c.scale(pulse, pulse, playBtn.centerX(), playBtn.centerY());
+        fill.setColor(0xFFFFFFFF);
         fill.setShader(new LinearGradient(playBtn.left, 0, playBtn.right, 0, AMBER, CORAL, Shader.TileMode.CLAMP));
         c.drawRoundRect(playBtn, ph / 2, ph / 2, fill);
         fill.setShader(null);
@@ -826,6 +838,7 @@ public class GameView extends View {
         float bw = 26 * u, bh = 9 * u, by = 17 * u + ph - bh - 4 * u;
         btnA.set(W / 2 - bw - 2 * u, by, W / 2 - 2 * u, by + bh);
         btnB.set(W / 2 + 2 * u, by, W / 2 + 2 * u + bw, by + bh);
+        fill.setColor(0xFFFFFFFF);
         fill.setShader(new LinearGradient(btnA.left, 0, btnA.right, 0, AMBER, CORAL, Shader.TileMode.CLAMP));
         c.drawRoundRect(btnA, bh / 2, bh / 2, fill);
         fill.setShader(null);
