@@ -56,6 +56,8 @@ public class GameView extends View {
     boolean holding, skimming, paused, finishPlaced, sunk;
     // Steers itself through the gaps; set from the launch intent to record demos.
     boolean autopilot;
+    final Sfx sfx = new Sfx();
+    float warnTimer;
     int cursors, cursorsTotal, score, stars;
     boolean newBest;
     String reason = "";
@@ -80,10 +82,12 @@ public class GameView extends View {
     final RectF r = new RectF();
     final RectF[] diffBtn = {new RectF(), new RectF(), new RectF()};
     final RectF playBtn = new RectF(), btnA = new RectF(), btnB = new RectF();
+    final RectF muteBtn = new RectF();
 
     public GameView(Context c) {
         super(c);
         prefs = c.getSharedPreferences("waterplane", Context.MODE_PRIVATE);
+        sfx.muted = prefs.getBoolean("mute", false);
         diff = prefs.getInt("diff", 1);
         Typeface mono = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD);
         text.setTypeface(mono);
@@ -148,11 +152,13 @@ public class GameView extends View {
             emit(PX, py, (float) Math.cos(a) * s, (float) Math.sin(a) * s - 10 * u, 0.5f + rnd.nextFloat() * 0.7f,
                     (0.4f + rnd.nextFloat()) * u, i % 3 == 0 ? FOAM : (i % 2 == 0 ? AMBER : CORAL), 1);
         }
-        if (water) splash(PX, 50);
+        sfx.play(Sfx.CRASH, 0.7f);
+        if (water) { splash(PX, 50); sfx.play(Sfx.SPLASH, 1); }
         finish(false);
     }
 
     void win() {
+        sfx.play(Sfx.WIN, 1);
         state = WIN; stateTime = 0;
         for (int i = 0; i < 90; i++) {
             float a = rnd.nextFloat() * 6.28f, s = (10 + rnd.nextFloat() * 45) * u;
@@ -174,9 +180,13 @@ public class GameView extends View {
     }
 
     public void pause() {
+        sfx.engine(0, false);
+        sfx.stop();
         holding = false;
         if (state == PLAY) paused = true;
     }
+
+    public void resume() { sfx.start(); }
 
     public boolean back() {
         if (state == MENU) return false;
@@ -195,6 +205,11 @@ public class GameView extends View {
         float x = e.getX(e.getActionIndex()), y = e.getY(e.getActionIndex());
         switch (state) {
             case MENU:
+                if (hit(muteBtn, x, y)) {
+                    sfx.muted = !sfx.muted;
+                    prefs.edit().putBoolean("mute", sfx.muted).apply();
+                    tick();
+                }
                 for (int i = 0; i < 3; i++) if (hit(diffBtn[i], x, y)) { diff = i; tick(); }
                 if (hit(playBtn, x, y)) { tick(); startReady(); }
                 break;
@@ -216,7 +231,10 @@ public class GameView extends View {
         return x > b.left - 2 * u && x < b.right + 2 * u && y > b.top - 2 * u && y < b.bottom + 2 * u;
     }
 
-    void tick() { performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); }
+    void tick() {
+        performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+        sfx.play(Sfx.CLICK, 1);
+    }
 
     // ---------------------------------------------------------------- update
 
@@ -243,7 +261,7 @@ public class GameView extends View {
             case DEAD:
                 if (!sunk) {
                     vy += GRAVITY * u * dt; py += vy * dt; spin += 420 * dt;
-                    if (py > seaY) { sunk = true; splash(PX, 30); }
+                    if (py > seaY) { sunk = true; splash(PX, 30); sfx.play(Sfx.SPLASH, 0.8f); }
                 }
                 break;
             case WIN:
@@ -253,6 +271,8 @@ public class GameView extends View {
                 break;
         }
         stepParticles(dt, cam - before);
+        float level = state == PLAY ? (holding && fuel > 0 ? 2 : 1) : state == READY ? 1 : state == WIN ? 2 : 0;
+        sfx.engine(level, state == PLAY && skimming);
     }
 
     void play(float dt) {
@@ -275,7 +295,7 @@ public class GameView extends View {
             if (vy > CRASH_V[diff] * u && !skimming) { crash("Nosedived into the sea", true); return; }
             py = skimY;
             if (vy > 0) vy = 0;
-            if (!skimming) splash(PX, 14);
+            if (!skimming) { splash(PX, 14); sfx.play(Sfx.SPLASH, 0.45f); }
             skimming = true;
             skimTime += dt;
             fuel = Math.min(100, fuel + 34 * dt);
@@ -284,6 +304,11 @@ public class GameView extends View {
                         -(10 + rnd.nextFloat() * 26) * u, 0.55f, (0.3f + rnd.nextFloat() * 0.6f) * u, FOAM, 1);
         } else skimming = false;
         exhaust(thrust);
+        warnTimer -= dt;
+        if (!skimming && vy > CRASH_V[diff] * u * 0.8f && py > seaY - 22 * u && warnTimer <= 0) {
+            sfx.play(Sfx.WARN, 1);
+            warnTimer = 0.35f;
+        }
 
         spawn();
 
@@ -315,7 +340,8 @@ public class GameView extends View {
                     if (!o.taken && Math.hypot(sx - cx, o.y - py) < 7.5f * u) {
                         o.taken = true; cursors++;
                         fuel = Math.min(100, fuel + 22);
-                        tick();
+                        performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        sfx.play(Sfx.COLLECT, 1);
                         for (int k = 0; k < 18; k++) {
                             float a = rnd.nextFloat() * 6.28f, s = (10 + rnd.nextFloat() * 22) * u;
                             emit(sx, o.y, (float) Math.cos(a) * s, (float) Math.sin(a) * s, 0.45f,
@@ -783,6 +809,7 @@ public class GameView extends View {
         fill.setShader(null);
         fill.setColor(0x55061219);
         c.drawRect(0, 0, W, H, fill);
+        drawMuteButton(c);
         float cx = W * 0.58f;
         text.setTextAlign(Paint.Align.CENTER);
         text.setTextSize(11 * u); text.setColor(FOAM);
@@ -821,6 +848,32 @@ public class GameView extends View {
         text.setTextSize(4.6f * u); text.setColor(NIGHT);
         c.drawText("▶  FLY", playBtn.centerX(), playBtn.centerY() + 1.6f * u, text);
         c.restore();
+    }
+
+    void drawMuteButton(Canvas c) {
+        float rad = 4.5f * u;
+        muteBtn.set(W - 4 * u - 2 * rad, 4 * u, W - 4 * u, 4 * u + 2 * rad);
+        stroke.setColor(0x66E9F4F2); stroke.setStrokeWidth(0.35f * u);
+        c.drawCircle(muteBtn.centerX(), muteBtn.centerY(), rad, stroke);
+        float x = muteBtn.centerX() - 1.2f * u, y = muteBtn.centerY();
+        tmp.reset();
+        tmp.moveTo(x - 2 * u, y - u); tmp.lineTo(x - 0.8f * u, y - u); tmp.lineTo(x + 0.8f * u, y - 2.4f * u);
+        tmp.lineTo(x + 0.8f * u, y + 2.4f * u); tmp.lineTo(x - 0.8f * u, y + u); tmp.lineTo(x - 2 * u, y + u);
+        tmp.close();
+        fill.setShader(null); fill.setColor(FOAM);
+        c.drawPath(tmp, fill);
+        if (sfx.muted) {
+            stroke.setColor(CORAL);
+            c.drawLine(x + 2 * u, y - 1.3f * u, x + 4.6f * u, y + 1.3f * u, stroke);
+            c.drawLine(x + 2 * u, y + 1.3f * u, x + 4.6f * u, y - 1.3f * u, stroke);
+        } else {
+            stroke.setColor(FOAM);
+            for (int i = 1; i <= 2; i++) {
+                float rr = 1.4f * u * i;
+                r.set(x + 0.8f * u - rr, y - rr, x + 0.8f * u + rr, y + rr);
+                c.drawArc(r, -45, 90, false, stroke);
+            }
+        }
     }
 
     void drawResult(Canvas c, boolean won) {

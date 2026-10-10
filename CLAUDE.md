@@ -13,6 +13,7 @@ Waterplane: Harbor Run is a small Android side-scroller in which you fly the wat
 - There is no Gradle. `build.sh` calls aapt2, javac (`--release 11`), d8, zipalign and apksigner from Android SDK build-tools 35 and platform 35 directly. Bump `VERSION` and `VERSION_CODE` at the top of `build.sh`.
 - Signing: `build.sh` uses `keystore.properties` when it exists (gitignored; the format is in `keystore.properties.example`) and falls back to `~/.android/debug.keystore` otherwise.
 - There are no tests and no lint. To verify a change, run the game on an emulator and look at screenshots.
+- Sound check without a device: `./tools/render-sfx.sh` runs a scripted flight through the real mixer on the desktop JVM and writes `build/sfx.wav`. Inspect levels with `ffmpeg -i build/sfx.wav -af volumedetect -f null -`. Headless emulators cannot be heard.
 - Autopilot: `adb shell am start -n dev.waterplane.game/.MainActivity --ez autopilot true` makes the game steer itself through the gaps. `docs/demo.gif` was recorded this way.
 - `.waterplane/builds.json` defines the phone's "Game APK" build button, which runs `./build.sh`. Build outputs are collected into `.claude/outbox/` automatically; never copy an APK there by hand.
 
@@ -32,7 +33,7 @@ adb -s emulator-5580 emu kill       # when done
 
 ## Architecture
 
-The whole game is two files in `src/dev/waterplane/game/`. `MainActivity` sets up the fullscreen window and passes back-press and pause to the view. Everything else is in `GameView`:
+The whole game is three files in `src/dev/waterplane/game/`. `Sfx` does all audio (below). `MainActivity` sets up the fullscreen window and passes back-press and pause to the view. Everything else is in `GameView`:
 
 - **Loop:** `onDraw` measures `dt` (capped at 1/30 s), calls `update(dt)` then `render(c)`, and schedules the next frame with `postInvalidateOnAnimation()`. There is no separate thread or SurfaceView.
 - **States:** `MENU → READY → PLAY → DEAD | WIN`. A tap on DEAD or WIN is ignored for the first 0.8 s.
@@ -42,6 +43,7 @@ The whole game is two files in `src/dev/waterplane/game/`. `MainActivity` sets u
 - **Mechanics:** holding climbs and burns `fuel` (shown as "TOKENS"). Touching the sea faster than `CRASH_V` crashes; otherwise the plane skims and refuels.
 - **Rendering:** everything is drawn procedurally with `Canvas` and `Path`; there are no image assets except the launcher icon. The plane is the logo's chevron, drawn in the logo's 512-unit coordinates and scaled by `PLANE * u / 214`. Particles live in a fixed ring buffer of parallel arrays, in screen space, and scroll with the world.
 - **Persistence:** SharedPreferences `waterplane` stores `best<diff>`, `stars<diff>` and `diff`.
+- **Audio (`Sfx`):** every sound is synthesized into float arrays at startup; there are no audio files. One thread mixes up to 8 one-shot voices with two continuous layers (engine hum, whose pitch follows `engine(level)`, and skim noise) into a single streaming `AudioTrack`. `GameView.update()` sets the engine level every frame. The thread starts in `resume()` and stops in `pause()`. Mute is the pref `mute`.
 
 ## Gotchas
 

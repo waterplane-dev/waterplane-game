@@ -17,6 +17,7 @@ It was built from a phone, start to finish: one prompt sent through waterplane t
 - **Release** to glide.
 - **Skim the water gently** to refill tokens. Hit it too steep and you sink.
 - Grab the blinking amber cursors for tokens and score.
+- Sound is synthesized in code (propeller hum, water hiss, chimes, splash, crash). Mute it with the speaker button on the menu.
 - Three difficulties: Easy, Normal and Hard. They change speed, gap size, how fast tokens burn and how steep a water landing you survive. Level 1 is "Harbor Run"; its 1–3 stars depend on how many cursors you collect.
 
 ## Build
@@ -29,7 +30,7 @@ No Gradle needed. You need Android SDK build-tools 35, platform 35 and a JDK 11 
 
 For a release, copy `keystore.properties.example` to `keystore.properties` and fill it in; `build.sh` signs with that key. Without it the APK is signed with your local debug key (`~/.android/debug.keystore`, created if missing).
 
-The whole game is two Java files using a plain `Canvas`: `src/dev/waterplane/game/GameView.java` and `MainActivity.java`.
+The whole game is three Java files with no libraries: `GameView.java` (game and drawing on a plain `Canvas`), `Sfx.java` (synthesized sound) and `MainActivity.java`.
 
 [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 

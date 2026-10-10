@@ -8,3 +8,7 @@ keystore.properties
 .claude/outbox/
 .claude/inbox/
 .outbox/
+
+# waterplane phone↔repo transport — do not commit
+.claude/inbox
+.outbox

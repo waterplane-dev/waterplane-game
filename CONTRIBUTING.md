@@ -12,7 +12,7 @@ Not wanted: ads, analytics, network access or accounts. The game has no internet
 
 ## How it is built
 
-The whole game is two files, `MainActivity.java` and `GameView.java`. It draws with a plain `Canvas`: no engine, no libraries, no image assets except the launcher icon. Sizes are in `u`, where 1u is 1% of the screen height, so the game looks the same on every phone.
+The whole game is three files: `MainActivity.java`, `GameView.java` and `Sfx.java` (all sound, synthesized in code). It draws with a plain `Canvas`: no engine, no libraries, no image assets except the launcher icon. Sizes are in `u`, where 1u is 1% of the screen height, so the game looks the same on every phone.
 
 `build.sh` builds with the Android SDK tools directly; there is no Gradle.
 
