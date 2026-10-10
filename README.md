@@ -4,6 +4,8 @@ A small Android side-scroller in which you fly the [waterplane](https://github.c
 
 It was built from a phone, start to finish: one prompt sent through waterplane to Claude Code running on a desktop, then one follow-up to test it on an emulator.
 
+<p align="center"><img src="docs/demo.gif" width="560" alt="The waterplane flying between storm clouds and rock spires over the sea at dusk, collecting amber cursors"></p>
+
 <p>
   <img src="docs/menu.jpg" width="49%" alt="Menu with difficulty selection">
   <img src="docs/play.jpg" width="49%" alt="Flying between storm clouds and rocks">
@@ -25,9 +27,11 @@ No Gradle needed. You need Android SDK build-tools 35, platform 35 and a JDK 11 
 ./build.sh   # → build/waterplane-game-<version>.apk
 ```
 
-The APK is signed with your local debug key (`~/.android/debug.keystore`, created if missing).
+For a release, copy `keystore.properties.example` to `keystore.properties` and fill it in; `build.sh` signs with that key. Without it the APK is signed with your local debug key (`~/.android/debug.keystore`, created if missing).
 
 The whole game is two Java files using a plain `Canvas`: `src/dev/waterplane/game/GameView.java` and `MainActivity.java`.
+
+[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 ## License
 

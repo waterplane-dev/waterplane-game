@@ -1,4 +1,10 @@
 build/
+*.apk
+*.aab
+*.idsig
+keystore.properties
+*.jks
+*.keystore
 .claude/outbox/
 .claude/inbox/
 .outbox/

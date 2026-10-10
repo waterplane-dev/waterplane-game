@@ -54,6 +54,8 @@ public class GameView extends View {
     float cam, py, vy, fuel, time, stateTime, shake, speed, spin, levelLen;
     float nextSpawn, prevGap, skimTime;
     boolean holding, skimming, paused, finishPlaced, sunk;
+    // Steers itself through the gaps; set from the launch intent to record demos.
+    boolean autopilot;
     int cursors, cursorsTotal, score, stars;
     boolean newBest;
     String reason = "";
@@ -257,6 +259,7 @@ public class GameView extends View {
         float prog = Math.min(1, cam / levelLen);
         speed = SPEED[diff] * u * (1 + 0.25f * prog);
         cam += speed * dt;
+        if (autopilot) holding = steer();
         boolean thrust = holding && fuel > 0;
         float acc = GRAVITY * u;
         if (thrust) {
@@ -327,6 +330,18 @@ public class GameView extends View {
         }
     }
 
+    boolean steer() {
+        float target = 46 * u, best = Float.MAX_VALUE;
+        for (Ob o : obs) {
+            float ahead = o.x + o.w - cam - PX;
+            if (ahead < -2 * u || ahead >= best) continue;
+            if (o.type == T_CLOUD) { best = ahead; target = o.y; }
+            else if (o.type == T_REEF) { best = ahead; target = o.top - 9 * u; }
+        }
+        target = Math.min(target, seaY - 9 * u);
+        return (py - target) + vy * 0.22f > 0;
+    }
+
     void spawn() {
         while (!finishPlaced && nextSpawn < cam + W + 30 * u) {
             float x = nextSpawn;
@@ -342,6 +357,7 @@ public class GameView extends View {
             float w = (13 + rnd.nextFloat() * 4) * u;
 
             Ob c = new Ob(); c.type = T_CLOUD; c.x = x; c.w = w; c.bot = g - gap / 2; c.seed = rnd.nextFloat() * 10;
+            c.y = g;
             c.path = cloudPath(w, c.bot); obs.add(c);
 
             float top = g + gap / 2;

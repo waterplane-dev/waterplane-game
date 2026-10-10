@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
             getWindow().setAttributes(lp);
         }
         game = new GameView(this);
+        game.autopilot = getIntent().getBooleanExtra("autopilot", false);
         setContentView(game);
     }
 

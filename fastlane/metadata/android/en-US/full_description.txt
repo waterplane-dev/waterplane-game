@@ -1,0 +1,11 @@
+Fly the waterplane through a stormy harbour at dusk.
+
+Hold to climb, let go to glide. Climbing burns TOKENS, and the only way to refuel is to touch down gently on the water and skim. Come in too steep and you sink.
+
+Thread the gaps between storm clouds and rock spires, dodge the lighthouses and the reefs, and grab the blinking amber cursors along the way. The more cursors you collect, the more stars you get at the finish.
+
+• Three difficulties: Easy, Normal and Hard
+• Level 1: Harbor Run, about a minute of flying that speeds up toward the finish
+• Best score and stars saved for each difficulty
+• No ads, no tracking, no internet permission
+• Free and open source (MIT)
