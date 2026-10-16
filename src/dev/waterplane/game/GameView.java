@@ -18,7 +18,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Random;
 
-/** Waterplane: Harbor Run. Fly the logo plane through the storm, skim the sea for tokens. */
+/** Waterplane Game. Fly the logo plane through the storm, skim the sea for tokens. */
 public class GameView extends View {
     // Brand palette (from the waterplane icon)
     static final int NIGHT = 0xFF0A1B28, NIGHT2 = 0xFF10324A, SEA = 0xFF0F5A66, DEEP = 0xFF061219;

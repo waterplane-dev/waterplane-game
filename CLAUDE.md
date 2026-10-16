@@ -2,15 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Waterplane: Harbor Run is a small Android side-scroller in which you fly the waterplane logo. It is one of the two demo apps for waterplane's open-source launch; the other is `~/dev/child-paint`, which sets the bar for what "publishable" means here. Read README.md for the gameplay rules.
+Waterplane Game is a small Android side-scroller in which you fly the waterplane logo. It is one of the two demo apps for waterplane's open-source launch; the other is `~/dev/child-paint`, which sets the bar for what "publishable" means here. Read README.md for the gameplay rules.
 
 ## Build and run
 
 ```sh
-./build.sh   # → build/waterplane-game-<VERSION>.apk
+./build.sh   # → build/waterplane-game-<VERSION>.apk and .aab
 ```
 
-- There is no Gradle. `build.sh` calls aapt2, javac (`--release 11`), d8, zipalign and apksigner from Android SDK build-tools 35 and platform 35 directly. Bump `VERSION` and `VERSION_CODE` at the top of `build.sh`.
+- There is no Gradle. `build.sh` calls aapt2, javac (`--release 11`), d8, zipalign and apksigner from Android SDK build-tools 36.1.0 and platform 36 directly, and assembles the Play bundle with a pinned bundletool (downloaded to `~/.cache/bundletool/`, hash-checked) signed by jarsigner. Target SDK is 36 because Play refuses lower for new apps and updates since 2026-08-31. Bump `VERSION` and `VERSION_CODE` at the top of `build.sh`.
+- Google Play: listed as "Waterplane Game", package `dev.waterplane.game` (permanent). The name and the dusk-scene icon (`brand/icon-src.svg`, the inverse of the waterplane app icon) exist so it is never mistaken for the waterplane app, which has its own listing; keep the launcher icon unlike the app's. `fastlane release` uploads `build/*.aab` as a draft to the internal track, `fastlane listing` only the store text and images; the service-account key is `~/.config/waterplane-game/play-api.json`.
 - Signing: `build.sh` uses `keystore.properties` when it exists (gitignored; the format is in `keystore.properties.example`) and falls back to `~/.android/debug.keystore` otherwise.
 - There are no tests and no lint. To verify a change, run the game on an emulator and look at screenshots.
 - Sound check without a device: `./tools/render-sfx.sh` runs a scripted flight through the real mixer on the desktop JVM and writes `build/sfx.wav`. Inspect levels with `ffmpeg -i build/sfx.wav -af volumedetect -f null -`. Headless emulators cannot be heard.

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <!-- Play feature graphic: the icon's dusk scene, widened, with the title. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EC6F55"/><stop offset=".62" stop-color="#F5A93F"/><stop offset="1" stop-color="#FFD58A"/></linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F5A66"/><stop offset="1" stop-color="#0A1B28"/></linearGradient>
+  </defs>
+  <rect width="1024" height="500" fill="url(#sky)"/>
+  <circle cx="820" cy="350" r="110" fill="#FFF1D2" opacity=".85"/>
+  <path d="M640,0 H1024 V120 C1000,150 958,148 940,126 C920,158 870,158 852,128 C828,150 786,142 782,110 C750,110 732,80 746,56 C722,38 628,30 640,0 Z" fill="#0A1B28" opacity=".92"/>
+  <path d="M850,350 L880,240 C886,220 904,214 914,236 L950,350 Z" fill="#0A1B28"/>
+  <path d="M700,350 L716,290 C720,280 730,278 736,290 L756,350 Z" fill="#0A1B28"/>
+  <rect y="342" width="1024" height="158" fill="url(#sea)"/>
+  <path d="M60,384 H300 M130,416 H460 M40,448 H260 M520,448 H780 M640,400 H960 M100,478 H420" stroke="#E9F4F2" stroke-width="6" stroke-linecap="round" opacity=".35"/>
+  <g transform="translate(560,30) scale(.62) rotate(-12 286 228)">
+    <path d="M128,146 L286,228 L128,310" fill="none" stroke="#0A1B28" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M272,228 L84,228" stroke="#0A1B28" stroke-width="22" stroke-linecap="round"/>
+    <path d="M92,204 L104,228 L92,252" fill="none" stroke="#0A1B28" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <rect x="760" y="132" width="60" height="16" rx="5" fill="#E9F4F2"/>
+  <text x="64" y="170" font-family="Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="84" fill="#0A1B28">Waterplane</text>
+  <text x="64" y="254" font-family="Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="84" fill="#0A1B28">Game</text>
+  <text x="68" y="306" font-family="Menlo, monospace" font-size="26" fill="#0A1B28" opacity=".8">&gt; hold to climb · skim to refuel_</text>
+</svg>

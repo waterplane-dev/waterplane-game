@@ -1,0 +1,22 @@
+# Uploads to Google Play. Build first: ./build.sh (needs keystore.properties for the upload key).
+# The app must already exist in Play Console and its very first bundle must be uploaded there
+# by hand; from then on these lanes do it.
+default_platform(:android)
+
+platform :android do
+  aab = File.expand_path("../build/waterplane-game-#{File.read(File.expand_path('../build.sh', __dir__))[/^VERSION="([^"]+)"/, 1]}.aab", __dir__)
+
+  desc "Upload the store listing text and images only"
+  lane :listing do
+    upload_to_play_store(skip_upload_aab: true, skip_upload_apk: true, skip_upload_changelogs: true)
+  end
+
+  desc "Upload the bundle and listing to a track (default internal) as a draft release"
+  lane :release do |options|
+    upload_to_play_store(
+      aab: aab,
+      track: options[:track] || "internal",
+      release_status: options[:status] || "draft"
+    )
+  end
+end

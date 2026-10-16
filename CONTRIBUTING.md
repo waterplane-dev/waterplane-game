@@ -1,6 +1,6 @@
 # Contributing
 
-Waterplane: Harbor Run is a small demo game kept by one person in spare time. Issues and small pull requests are welcome. For anything big, open an issue first.
+Waterplane Game is a small demo game kept by one person in spare time. Issues and small pull requests are welcome. For anything big, open an issue first.
 
 ## What fits
 

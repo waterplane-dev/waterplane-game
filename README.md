@@ -1,4 +1,4 @@
-# Waterplane: Harbor Run
+# Waterplane Game
 
 A small Android side-scroller in which you fly the [waterplane](https://github.com/waterplane-dev) logo through storm clouds, rock spires, lighthouses and reefs.
 
@@ -22,13 +22,13 @@ It was built from a phone, start to finish: one prompt sent through waterplane t
 
 ## Build
 
-No Gradle needed. You need Android SDK build-tools 35, platform 35 and a JDK 11 or newer.
+No Gradle needed. You need Android SDK build-tools 36.1.0, platform 36 and a JDK 11 or newer.
 
 ```sh
-./build.sh   # → build/waterplane-game-<version>.apk
+./build.sh   # → build/waterplane-game-<version>.apk and .aab (the bundle Google Play takes)
 ```
 
-For a release, copy `keystore.properties.example` to `keystore.properties` and fill it in; `build.sh` signs with that key. Without it the APK is signed with your local debug key (`~/.android/debug.keystore`, created if missing).
+For a release, copy `keystore.properties.example` to `keystore.properties` and fill it in; `build.sh` signs with that key. Without it both are signed with your local debug key (`~/.android/debug.keystore`, created if missing).
 
 The whole game is three Java files with no libraries: `GameView.java` (game and drawing on a plain `Canvas`), `Sfx.java` (synthesized sound) and `MainActivity.java`.
 

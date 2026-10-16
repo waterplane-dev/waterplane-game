@@ -12,3 +12,4 @@ keystore.properties
 # waterplane phone↔repo transport — do not commit
 .claude/inbox
 .outbox
+fastlane/report.xml

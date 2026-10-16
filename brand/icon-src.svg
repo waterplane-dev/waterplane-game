@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Waterplane Game icon: the plane in silhouette against a dusk sky, between a storm
+       cloud and a rock spire. Deliberately the inverse of the waterplane app icon (light
+       warm sky, dark plane) so the two never look alike on a home screen. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EC6F55"/><stop offset=".62" stop-color="#F5A93F"/><stop offset="1" stop-color="#FFD58A"/></linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F5A66"/><stop offset="1" stop-color="#0A1B28"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#sky)"/>
+  <circle cx="360" cy="352" r="96" fill="#FFF1D2" opacity=".85"/>
+  <!-- storm cloud from above -->
+  <path d="M250,0 H512 V150 C490,178 452,176 436,156 C418,186 372,186 356,158 C334,178 296,170 292,140 C262,140 246,112 258,88 C236,70 240,30 250,0 Z" fill="#0A1B28" opacity=".92"/>
+  <!-- rock spire from the sea -->
+  <path d="M376,352 L404,250 C410,232 426,226 436,246 L470,352 Z" fill="#0A1B28"/>
+  <rect y="344" width="512" height="168" fill="url(#sea)"/>
+  <path d="M40,384 H220 M90,414 H300 M30,444 H180 M250,444 H400 M70,474 H260" stroke="#E9F4F2" stroke-width="6" stroke-linecap="round" opacity=".35"/>
+  <!-- the plane, dark, climbing -->
+  <g transform="translate(40,46) scale(.78) rotate(-12 286 228)">
+    <path d="M128,146 L286,228 L128,310" fill="none" stroke="#0A1B28" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M272,228 L84,228" stroke="#0A1B28" stroke-width="22" stroke-linecap="round"/>
+    <path d="M92,204 L104,228 L92,252" fill="none" stroke="#0A1B28" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M36,252 L108,236 M28,280 L88,268" stroke="#0A1B28" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+  <!-- a cursor to collect -->
+  <rect x="300" y="196" width="72" height="18" rx="6" fill="#E9F4F2"/>
+</svg>

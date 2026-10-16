@@ -9,3 +9,5 @@ Thread the gaps between storm clouds and rock spires, dodge the lighthouses and 
 • Best score and stars saved for each difficulty
 • No ads, no tracking, no internet permission
 • Free and open source (MIT)
+
+A small game from the makers of waterplane. It is a game only: the waterplane app itself is a separate listing.

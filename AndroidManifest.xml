@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.waterplane.game">
     <application
-        android:label="Waterplane"
+        android:label="Waterplane Game"
         android:icon="@mipmap/ic_launcher"
         android:hardwareAccelerated="true"
         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
