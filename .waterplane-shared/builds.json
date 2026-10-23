@@ -2,7 +2,7 @@
   {
     "id": "apk",
     "name": "Game APK",
-    "cmd": "if [ -x ./signed.local.sh ]; then ./signed.local.sh ./build.sh; else ./build.sh; fi",
+    "cmd": "./build.sh",
     "dir": "."
   }
 ]
