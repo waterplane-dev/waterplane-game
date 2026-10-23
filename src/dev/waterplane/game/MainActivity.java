@@ -1,6 +1,7 @@
 package dev.waterplane.game;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,10 @@ public class MainActivity extends Activity {
             getWindow().setAttributes(lp);
         }
         game = new GameView(this);
-        game.autopilot = getIntent().getBooleanExtra("autopilot", false);
+        // Autopilot flies the plane for screenshots and tests; only a debuggable build honours it, so
+        // another app cannot launch the store build with it on.
+        boolean debuggable = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        game.autopilot = debuggable && getIntent().getBooleanExtra("autopilot", false);
         setContentView(game);
     }
 

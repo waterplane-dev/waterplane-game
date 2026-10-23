@@ -25,6 +25,9 @@ rm -rf build && mkdir -p build/gen build/classes build/dex build/base
 "$BT/aapt2" compile --dir res -o build/res.zip
 LINK=(-I "$JAR" --manifest AndroidManifest.xml --min-sdk-version 24 --target-sdk-version 36
   --version-code "$VERSION_CODE" --version-name "$VERSION")
+# A build without an upload key (the everyday debug-key build) is debuggable, which is what lets it
+# honour the autopilot extra; a build for Play is not.
+if [ -z "${UPLOAD_STORE_FILE:-}" ] && [ ! -f keystore.properties ]; then LINK+=(--debug-mode); fi
 "$BT/aapt2" link "${LINK[@]}" -o build/base.apk build/res.zip --java build/gen
 "$BT/aapt2" link "${LINK[@]}" -o build/proto.apk build/res.zip --proto-format
 javac -nowarn --release 11 -classpath "$JAR" -d build/classes $(find src build/gen -name '*.java')
