@@ -13,3 +13,7 @@ keystore.properties
 .claude/inbox
 .outbox
 fastlane/report.xml
+
+# machine-local wrappers (signing with the owner's key)
+*.local.sh
+CLAUDE.local.md

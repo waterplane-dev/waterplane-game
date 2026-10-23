@@ -1,1 +1,0 @@
-[{ "id": "apk", "name": "Game APK", "cmd": "./build.sh", "dir": "." }]
