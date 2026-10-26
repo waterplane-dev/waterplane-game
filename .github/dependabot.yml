@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Only the workflow action pins: this repo has no package manifests (plain Java, built by
+  # build.sh). Monthly with a 7-day cooldown keeps the SHA pins current without churn.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
